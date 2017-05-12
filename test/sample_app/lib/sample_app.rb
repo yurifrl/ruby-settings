@@ -1,0 +1,3 @@
+module SampleApp
+  # Your code goes here...
+end

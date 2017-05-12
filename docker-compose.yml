@@ -1,0 +1,13 @@
+version: '2'
+services:
+  web:
+    image: ruby
+    working_dir: /usr/local/src
+    volumes:
+      - .:/usr/local/src
+      # - gems:/usr/local/bundle/gems/
+    environment:
+      - RACK_ENV=test
+
+volumes:
+  gems: {}

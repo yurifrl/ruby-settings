@@ -5,9 +5,11 @@ class SettingsTest < Minitest::Test
     refute_nil ::Settings::VERSION
   end
 
-  def test_it_does_something_useful
-    Settings.config.set_config_folder('../test/sample_app/config/settings')
-    Settings.load!
+  def test_it
+    Settings.set_config_folder('../test/sample_app/config/settings')
+    binding.pry
+
+    # Settings.load!
 
     assert Settings.env == 'test'
     assert Settings.hello == 'HY'

@@ -6,44 +6,43 @@
 # @dependency YAML
 # @dependency folder structure './config/settings/*.yml'
 # @dependency env files './*.env'
-require "settings/version"
 require 'yaml'
 require 'erb'
 require 'dotenv'
 require 'pry'
 
+require "settings/version"
+require "settings/config"
+
 # Easy way to add multi-environment yaml settings to the application
 module Settings
   class Error < StandardError ; end
   class Error::FileForEnvironmentNotFound < Error ; end
-  class Error::FileSintaxError < SyntaxError ; end
-  class Error::InvalidNameForKey < SyntaxError ; end
-  class Error::RackEnvNotSet < SyntaxError ; end
-
-  class Default
-    attr_reader :config_folder
-
-    def initialize(options = {})
-      @config_folder = options.fetch(:config_folder, 'config/settings/')
-    end
-
-    def set_config_folder(path)
-      verify_valid_path!(path)
-      @config_folder = path
-    end
-
-    private
-    def verify_valid_path!(path)
-      nil
-    end
-  end
+  class Error::FileSintaxError < Error ; end
+  class Error::InvalidNameForKey < Error ; end
+  class Error::RackEnvNotSet < Error ; end
 
   class << self
 
     #command
     def initialize_config!
-      create_class_method_on_settings_class!(:config, Default.new)
+      create_class_method_on_settings_class!(:config, Config.new)
       nil
+    end
+
+    #query
+    def get_config
+      self.config
+    end
+
+    #query
+    def set_config_folder(path)
+      self.config.set_config_folder(path)
+    end
+
+    #query
+    def get_config_folder
+      self.config.config_folder
     end
 
     #command
@@ -72,20 +71,19 @@ module Settings
     #query
     def get_current_env
       env = ENV['RACK_ENV']
-    rescue => e
+    rescue
       raise Error::RackEnvNotSet if env.nil?
     end
 
     #query
     def get_config_path(env)
-      application_path = File.dirname(__FILE__)
-      File.join(application_path, Settings.config.config_folder, "#{env}.yml")
+      File.join(get_config_folder, "#{env}.yml")
     end
 
     #query
     def read_yml_file(path)
       IO.read(path)
-    rescue Errno::ENOENT => e
+    rescue Errno::ENOENT
       raise Error::FileForEnvironmentNotFound
     end
 
@@ -97,7 +95,7 @@ module Settings
     #query
     def convert_yml_to_hash(file)
       YAML.load(file)
-    rescue Psych::SyntaxError => e
+    rescue Psych::SyntaxError
       raise Error::FileSintaxError
     end
 

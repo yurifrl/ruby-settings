@@ -9,24 +9,30 @@
 require 'yaml'
 require 'erb'
 require 'dotenv'
-require 'pry'
 
-require "settings/version"
+module Settings
+end
+
+# @dependency
 require "settings/config"
+require "settings/default"
 
 # Easy way to add multi-environment yaml settings to the application
 module Settings
-  class Error < StandardError ; end
-  class Error::FileForEnvironmentNotFound < Error ; end
-  class Error::FileSintaxError < Error ; end
-  class Error::InvalidNameForKey < Error ; end
-  class Error::RackEnvNotSet < Error ; end
+  class Error < RuntimeError
+    class InitializationError < Error; end
+    class FileForEnvironmentNotFound < Error ; end
+    class FileSintaxError < Error ; end
+    class InvalidNameForKey < Error ; end
+    class RackEnvNotSet < Error ; end
+  end
 
   class << self
 
     #command
     def initialize_config!
-      create_class_method_on_settings_class!(:config, Config.new)
+      config = Config.new
+      create_class_method_on_settings_class!(:config, config)
       nil
     end
 

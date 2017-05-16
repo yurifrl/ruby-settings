@@ -5,9 +5,10 @@ services:
     working_dir: /usr/local/src
     volumes:
       - .:/usr/local/src
-      # - gems:/usr/local/bundle/gems/
+      - bundle:/usr/local/bundle
     environment:
       - RACK_ENV=test
+      - TEST=test/settings/config_test.rb
 
 volumes:
-  gems: {}
+  bundle: {}

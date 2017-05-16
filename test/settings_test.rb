@@ -1,17 +1,23 @@
 require 'test_helper'
 
-class SettingsTest < Minitest::Test
-  def test_that_it_has_a_version_number
-    refute_nil ::Settings::VERSION
-  end
+# class SettingsTest < Minitest::Test
+#   def test_that_it_has_a_version_number
+#     refute_nil ::Settings::VERSION
+#   end
 
-  def test_it
-    Settings.set_config_folder('../test/sample_app/config/settings')
-    binding.pry
+#   def should_raise_an_error
+#     exception = assert_raises SettingsError do
+#       Settings.load!
+#     end
+#   end
 
-    # Settings.load!
+#   # def test_it
+#   #   Settings.set_config_folder('../test/sample_app/config/settings')
+#   #   binding.pry
 
-    assert Settings.env == 'test'
-    assert Settings.hello == 'HY'
-  end
-end
+#   #   Settings.load!
+
+#   #   assert Settings.env == 'test'
+#   #   assert Settings.hello == 'HY'
+#   # end
+# end

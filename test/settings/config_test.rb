@@ -15,7 +15,7 @@ class Settings::ConfigTest < Minitest::Test
 
   def test_should_raise_an_error_with_the_default_config
     exception = assert_raises Settings::PathValidator::Error::MissingEnvironmentSettingsFile do
-      Settings::Config.new()
+      Settings::Config.new
     end
   end
 

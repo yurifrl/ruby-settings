@@ -14,8 +14,7 @@ module Settings
 end
 
 # @dependency
-require "settings/config"
-require "settings/default"
+require "settings/config_factory"
 
 # Easy way to add multi-environment yaml settings to the application
 module Settings
@@ -30,29 +29,15 @@ module Settings
   class << self
 
     #command
-    def initialize_config!
-      config = Config.new
+    def initialize_config!(path)
+      config = Settings::ConfigFactory.(self, path)
       create_class_method_on_settings_class!(:config, config)
       nil
     end
 
-    #query
-    def get_config
-      self.config
-    end
-
-    #query
-    def set_config_folder(path)
-      self.config.set_config_folder(path)
-    end
-
-    #query
-    def get_config_folder
-      self.config.config_folder
-    end
-
     #command
     def load!
+      initialize_config!(nil)
       load_dot_files!
 
       env = get_current_env
@@ -83,7 +68,7 @@ module Settings
 
     #query
     def get_config_path(env)
-      File.join(get_config_folder, "#{env}.yml")
+      File.join(self.config.get_config_folder, "#{env}.yml")
     end
 
     #query
@@ -134,5 +119,5 @@ module Settings
   end
 end
 
-Settings.initialize_config!
+# Settings.initialize_config!
 # Settings.load!

@@ -8,7 +8,6 @@ services:
       - bundle:/usr/local/bundle
     environment:
       - RACK_ENV=test
-      - TEST=test/settings/config_test.rb
 
 volumes:
   bundle: {}
